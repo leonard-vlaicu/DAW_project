@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div>
+        {% for item in topSales %}
+            <div class="sale-item">
+                <a href="{{ item.url }}">
+                    {{ item.imageHtml|raw }}
+                </a>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

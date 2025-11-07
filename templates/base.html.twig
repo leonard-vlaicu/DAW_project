@@ -13,16 +13,29 @@
         {{ encore_entry_script_tags('main') }}
     {% endblock %}
 </head>
-<body>
+<body class="bg-base-300 h-screen">
 
-<div class="navbar bg-base-100 shadow-sm">
+<div class="navbar shadow-md bg-base-100">
     <div class="flex-1">
         <a class="btn btn-ghost text-xl" href="{{ path('app_main') }}">VL - Library</a>
     </div>
     <div class="flex-none">
         <ul class="menu menu-horizontal px-1">
-            <li><a aria-current="page" href="{{ path('app_main') }}">Home</a></li>
-            <li><a aria-current="page" href="{{ path('app_book_listing') }}">Book listing</a></li>
+            <li><a href="{{ path('app_main') }}">Home</a></li>
+            <li><a href="{{ path('app_book_listing') }}">Book listing</a></li>
+
+            {% if app.user %}
+                <li>
+                    <details>
+                        <summary><a href="#">Profile</a></summary>
+                        <ul>
+                            <li><a href="{{ path('app_logout') }}">Logout</a></li>
+                        </ul>
+                    </details>
+                </li>
+            {% else %}
+                <li><a href="{{ path('app_login') }}">Login</a></li>
+            {% endif %}
         </ul>
     </div>
 </div>

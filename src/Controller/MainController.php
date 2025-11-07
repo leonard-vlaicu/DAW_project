@@ -15,7 +15,6 @@ class MainController extends AbstractController {
     public function index(ParserService $parserService, LoggerInterface $logger): Response {
         $topSales = $parserService->parseUri("https://carturesti.ro/");
         $topSales = array_filter($topSales, function ($item) { return str_contains($item['url'], "/carte/"); });
-
         return $this->render('main/main.html.twig',
             array('topSales' => $topSales),
         );

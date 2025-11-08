@@ -38,6 +38,22 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface {
     #[ORM\Column]
     private bool $isVerified = false;
 
+    #[ORM\Column]
+    private bool $forcePasswordChange = false;
+
+    /**
+     * @return bool
+     */
+    public function isForcePasswordChange(): bool {
+        return $this->forcePasswordChange;
+    }
+
+    /**
+     * @param bool $forcePasswordChange
+     */
+    public function setForcePasswordChange(bool $forcePasswordChange): void {
+        $this->forcePasswordChange = $forcePasswordChange;
+    }
 
     public function getUserDetails(): UserDetails|null {
         return $this->userDetails;

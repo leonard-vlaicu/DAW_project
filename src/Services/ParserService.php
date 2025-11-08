@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use Psr\Log\LoggerInterface;
+use Symfony\Component\DependencyInjection\ParameterBag\ContainerBagInterface;
 use Symfony\Component\DomCrawler\Crawler;
 use Symfony\Contracts\Cache\CacheInterface;
 use Symfony\Contracts\Cache\ItemInterface;
@@ -15,11 +16,13 @@ class ParserService {
     private HttpClientInterface $httpClient;
     private LoggerInterface $logger;
     private CacheInterface $cache;
+    private ContainerBagInterface $containerBag;
 
-    public function __construct(HttpClientInterface $httpClient, LoggerInterface $logger, CacheInterface $cache) {
+    public function __construct(HttpClientInterface $httpClient, LoggerInterface $logger, CacheInterface $cache, ContainerBagInterface $containerBag) {
         $this->httpClient = $httpClient;
         $this->logger = $logger;
         $this->cache = $cache;
+        $this->containerBag = $containerBag;
     }
 
     private function getCacheKey(string $url): string {
@@ -29,11 +32,10 @@ class ParserService {
     public function parseUri($url): array {
         try {
             string: $cacheKey = $this->getCacheKey($url);
-
             $cachedContent = $this->cache->get($cacheKey, function (ItemInterface $item) use ($url) {
                 $this->logger->info("Fetching data from $url");
 
-                $item->expiresAfter(60 * 60 * 24);
+                $item->expiresAfter($this->containerBag->get('app.cache_parameter_lifetime'));
 
                 $response = $this->httpClient->request('GET', $url, [
                     'timeout' => 10,

@@ -4,16 +4,23 @@
 
     <div class="m-4">
         <h1 class="text-4xl font-bold">Top sales</h1>
+        <div class="divider"></div>
 
         <div class="mt-4 flex gap-2">
-            {% for item in topSales %}
-                <div class="sale-item shadow-white drop-shadow-md rounded-lg hover:drop-shadow-2xl hover:scale-110 transition-all duration-200">
-                    <a href="{{ item.url }}">
-                        {{ item.imageHtml|raw }}
-                    </a>
-{#                    <div class="badge badge-primary badge-md">{{ loop.index }}</div>#}
-                </div>
-            {% endfor %}
+
+            {% if topSales|length > 0 %}
+                {% for item in topSales %}
+                    <div
+                        class="sale-item shadow-white drop-shadow-md rounded-lg hover:drop-shadow-2xl hover:scale-110 transition-all duration-200">
+                        <a href="{{ item.url }}">
+                            {{ item.imageHtml|raw }}
+                        </a>
+                        {#                    <div class="badge badge-primary badge-md">{{ loop.index }}</div> #}
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="text-xl">Content not available</div>
+            {% endif %}
         </div>
     </div>
 {% endblock %}

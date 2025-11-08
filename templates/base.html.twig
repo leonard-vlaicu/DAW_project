@@ -27,7 +27,7 @@
             {% if app.user %}
                 <li>
                     <details>
-                        <summary><a href="#">Profile</a></summary>
+                        <summary>Profile</summary>
                         <ul>
                             <li><a href="{{ path('app_logout') }}">Logout</a></li>
                         </ul>
@@ -40,6 +40,7 @@
     </div>
 </div>
 
-{% block body %}{% endblock %}
+{% block body %}
+{% endblock %}
 </body>
 </html>

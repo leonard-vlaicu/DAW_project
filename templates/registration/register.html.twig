@@ -5,23 +5,41 @@
 {% block body %}
 
     <div class="h-2/4 mx-auto">
-        <div class="flex flex-col items-center justify-center">
-            {% for flash_error in app.flashes('verify_email_error') %}
-                <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
-            {% endfor %}
-
-            <h1 class="text-2xl mb-3">Register</h1>
-
-            {{ form_errors(registrationForm) }}
+        <div class="flex flex-col items-center justify-center align-middle h-full">
+            <h1 class="text-2xl mb-3 font-weight-normal">Register</h1>
 
             {{ form_start(registrationForm) }}
-            {{ form_row(registrationForm.email) }}
-            {{ form_row(registrationForm.plainPassword, {
-                label: ' '
-            }) }}
-            {{ form_row(registrationForm.agreeTerms) }}
 
-            <button type="submit" class="btn btn-primary">Register</button>
+            <label class="input">
+                {{ form_widget(registrationForm.email, {'attr': {'placeholder': 'mail@site.com'}}) }}
+            </label>
+            <div class="text-error">
+                {{ form_errors(registrationForm.email) }}
+            </div>
+
+            <label class="input mt-4">
+                {{ form_widget(registrationForm.plainPassword, {'attr': {'placeholder': 'Password'}}) }}
+            </label>
+            <div class="text-error">
+                {{ form_errors(registrationForm.plainPassword) }}
+            </div>
+
+            <div class="form-control mt-4">
+                <label class="label cursor-pointer justify-start gap-2">
+                    {{ form_widget(registrationForm.agreeTerms) }}
+                    <span class="label-text">{{ form_label(registrationForm.agreeTerms) }}</span>
+                </label>
+                {{ form_errors(registrationForm.agreeTerms) }}
+            </div>
+
+            <div class="mt-5">
+                <button type="submit" class="btn btn-primary">Register</button>
+            </div>
+
+            <p class="mt-4">Already have an account?
+                <a class="text-accent" href="{{ path('app_login') }}">Click here to login</a>
+            </p>
+
             {{ form_end(registrationForm) }}
         </div>
     </div>

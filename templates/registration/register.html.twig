@@ -11,17 +11,23 @@
             {{ form_start(registrationForm) }}
 
             <label class="input">
-                {{ form_widget(registrationForm.email, {'attr': {'placeholder': 'mail@site.com'}}) }}
+                {{ form_widget(registrationForm.email.first, {'attr': {'placeholder': 'Enter your email'}}) }}
+            </label>
+            <label class="input mt-2">
+                {{ form_widget(registrationForm.email.second, {'attr': {'placeholder': 'Confirm your email'}}) }}
             </label>
             <div class="text-error">
-                {{ form_errors(registrationForm.email) }}
+                {{ form_errors(registrationForm.email.first) }}
             </div>
 
-            <label class="input mt-4">
-                {{ form_widget(registrationForm.plainPassword, {'attr': {'placeholder': 'Password'}}) }}
+            <label class="input mt-8">
+                {{ form_widget(registrationForm.plainPassword.first, {'attr': {'placeholder': 'Enter your password'}}) }}
+            </label>
+            <label class="input mt-2">
+                {{ form_widget(registrationForm.plainPassword.second, {'attr': {'placeholder': 'Confirm your password'}}) }}
             </label>
             <div class="text-error">
-                {{ form_errors(registrationForm.plainPassword) }}
+                {{ form_errors(registrationForm.plainPassword.first) }}
             </div>
 
             <div class="form-control mt-4">

@@ -13,12 +13,12 @@
             <h1 class="text-2xl mb-3 font-weight-normal">Please sign in</h1>
 
             <label class="input validator">
-                <input type="email" value="{{ last_username }}" name="_username" id="username" required autofocus placeholder="mail@site.com">
+                <input type="email" class="form-control" value="{{ last_username }}" name="_username" id="username" required autofocus placeholder="mail@site.com">
             </label>
             <div class="validator-hint hidden">Enter valid email address</div>
 
             <label class="input mt-10">
-                <input type="password" name="_password" id="password" required>
+                <input type="password" class="form-control" name="_password" id="password" required>
                 <input type="hidden" name="_csrf_token" data-controller="csrf-protection" value="{{ csrf_token('authenticate') }}">
             </label>
 

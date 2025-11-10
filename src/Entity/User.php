@@ -20,20 +20,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface {
     #[ORM\Column(length: 180)]
     private ?string $email = null;
 
-    /**
-     * @var list<string> The user roles
-     */
     #[ORM\Column]
     private array $roles = [];
 
-    /**
-     * @var string The hashed password
-     */
     #[ORM\Column]
     private ?string $password = null;
-
-    #[ORM\OneToOne(targetEntity: UserDetails::class, mappedBy: 'user')]
-    private UserDetails|null $userDetails = null;
 
     #[ORM\Column]
     private bool $isVerified = false;
@@ -41,28 +32,60 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface {
     #[ORM\Column]
     private bool $forcePasswordChange = false;
 
-    /**
-     * @return bool
-     */
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $firstName = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $lastName = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $phoneNumber = null;
+
+    #[ORM\Column(length: 512)]
+    private ?string $signature = null;
+
+    public function getFirstName(): ?string {
+        return $this->firstName;
+    }
+
+    public function setFirstName(?string $firstName): User {
+        $this->firstName = $firstName;
+        return $this;
+    }
+
+    public function getLastName(): ?string {
+        return $this->lastName;
+    }
+
+    public function setLastName(?string $lastName): User {
+        $this->lastName = $lastName;
+        return $this;
+    }
+
+    public function getPhoneNumber(): ?string {
+        return $this->phoneNumber;
+    }
+
+    public function setPhoneNumber(?string $phoneNumber): User {
+        $this->phoneNumber = $phoneNumber;
+        return $this;
+    }
+
+    public function getSignature(): ?string {
+        return $this->signature;
+    }
+
+    public function setSignature(?string $signature): User {
+        $this->signature = $signature;
+        return $this;
+    }
+
     public function isForcePasswordChange(): bool {
         return $this->forcePasswordChange;
     }
 
-    /**
-     * @param bool $forcePasswordChange
-     */
     public function setForcePasswordChange(bool $forcePasswordChange): void {
         $this->forcePasswordChange = $forcePasswordChange;
-    }
-
-    public function getUserDetails(): UserDetails|null {
-        return $this->userDetails;
-    }
-
-    public function setUserDetails(UserDetails $userDetails): static {
-        $this->userDetails = $userDetails;
-
-        return $this;
     }
 
     public function getId(): ?int {
@@ -79,18 +102,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface {
         return $this;
     }
 
-    /**
-     * A visual identifier that represents this user.
-     *
-     * @see UserInterface
-     */
     public function getUserIdentifier(): string {
         return (string)$this->email;
     }
 
-    /**
-     * @see UserInterface
-     */
     public function getRoles(): array {
         $roles = $this->roles;
         // guarantee every user at least has ROLE_USER
@@ -99,18 +114,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface {
         return array_unique($roles);
     }
 
-    /**
-     * @param list<string> $roles
-     */
     public function setRoles(array $roles): static {
         $this->roles = $roles;
 
         return $this;
     }
 
-    /**
-     * @see PasswordAuthenticatedUserInterface
-     */
     public function getPassword(): ?string {
         return $this->password;
     }
@@ -121,9 +130,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface {
         return $this;
     }
 
-    /**
-     * Ensure the session doesn't contain actual password hashes by CRC32C-hashing them, as supported since Symfony 7.3.
-     */
     public function __serialize(): array {
         $data = (array)$this;
         $data["\0" . self::class . "\0password"] = hash('crc32c', $this->password);
@@ -136,13 +142,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface {
         // @deprecated, to be removed when upgrading to Symfony 8
     }
 
-    public function isVerified(): bool
-    {
+    public function isVerified(): bool {
         return $this->isVerified;
     }
 
-    public function setIsVerified(bool $isVerified): static
-    {
+    public function setIsVerified(bool $isVerified): static {
         $this->isVerified = $isVerified;
 
         return $this;

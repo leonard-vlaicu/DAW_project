@@ -30,6 +30,13 @@ class EmailVerifier {
         $context['expiresAtMessageKey'] = $signatureComponents->getExpirationMessageKey();
         $context['expiresAtMessageData'] = $signatureComponents->getExpirationMessageData();
 
+        $urlComponents = parse_url($signatureComponents->getSignedUrl());
+        parse_str($urlComponents['query'], $query);
+
+        $user->setSignature($query['signature']);
+        $this->entityManager->persist($user);
+        $this->entityManager->flush();
+
         $email->context($context);
 
         $this->mailer->send($email);

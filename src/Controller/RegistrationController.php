@@ -36,7 +36,6 @@ class RegistrationController extends AbstractController {
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            /** @var string $plainPassword */
             $plainPassword = $form->get('plainPassword')->getData();
 
             // encode the plain password
@@ -51,7 +50,7 @@ class RegistrationController extends AbstractController {
                     ->from(new Address('no-reply@vla-library.it.com', 'VLA - Library'))
                     ->to((string)$user->getEmail())
                     ->subject('Please Confirm your Email')
-                    ->htmlTemplate('registration/confirmation_email.html.twig')
+                    ->htmlTemplate('registration/email_confirmation.html.twig')
             );
 
             return $this->render('registration/post_register.html.twig');
@@ -77,7 +76,6 @@ class RegistrationController extends AbstractController {
             return $this->redirectToRoute('app_register');
         }
 
-        // @TODO Change the redirect on success and handle or remove the flash message in your templates
         $this->addFlash('success', 'Your email address has been verified.');
 
         return $this->redirectToRoute('app_register');

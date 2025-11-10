@@ -13,16 +13,10 @@ use Symfony\Contracts\HttpClient\Exception\ServerExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class ParserService {
-    private HttpClientInterface $httpClient;
-    private LoggerInterface $logger;
-    private CacheInterface $cache;
-    private ContainerBagInterface $containerBag;
-
-    public function __construct(HttpClientInterface $httpClient, LoggerInterface $logger, CacheInterface $cache, ContainerBagInterface $containerBag) {
-        $this->httpClient = $httpClient;
-        $this->logger = $logger;
-        $this->cache = $cache;
-        $this->containerBag = $containerBag;
+    public function __construct(private HttpClientInterface   $httpClient,
+                                private LoggerInterface       $logger,
+                                private CacheInterface        $cache,
+                                private ContainerBagInterface $containerBag) {
     }
 
     private function getCacheKey(string $url): string {
@@ -31,7 +25,8 @@ class ParserService {
 
     public function parseUri($url): array {
         try {
-            string: $cacheKey = $this->getCacheKey($url);
+            string:
+            $cacheKey = $this->getCacheKey($url);
             $cachedContent = $this->cache->get($cacheKey, function (ItemInterface $item) use ($url) {
                 $this->logger->info("Fetching data from $url");
 
@@ -57,7 +52,8 @@ class ParserService {
     }
 
     public function parseHtml(string $html, string $url): array {
-        Crawler: $crawler = new Crawler($html, $url);
+        Crawler:
+        $crawler = new Crawler($html, $url);
 
         return $crawler->filter('#topVanzari-109 a')->each(function (Crawler $link) {
             $imageHtml = '';

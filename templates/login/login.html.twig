@@ -4,22 +4,25 @@
 
 {% block body %}
 
-    <div class="h-2/4 mx-auto">
+    <div class="mt-20">
         <form method="post" class="flex flex-col items-center justify-center align-middle h-full">
             {% if error %}
-                <div class="alert alert-error alert-soft mb-10" role="alert">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+                <div class="alert alert-error alert-soft mb-10"
+                     role="alert">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
             {% endif %}
 
             <h1 class="text-2xl mb-3 font-weight-normal">Please sign in</h1>
 
             <label class="input validator">
-                <input type="email" class="form-control" value="{{ last_username }}" name="_username" id="username" required autofocus placeholder="mail@site.com">
+                <input type="email" class="form-control" value="{{ last_username }}" name="_username" id="username"
+                       required autofocus placeholder="mail@site.com">
             </label>
             <div class="validator-hint hidden">Enter valid email address</div>
 
             <label class="input mt-10">
                 <input type="password" class="form-control" name="_password" id="password" required>
-                <input type="hidden" name="_csrf_token" data-controller="csrf-protection" value="{{ csrf_token('authenticate') }}">
+                <input type="hidden" name="_csrf_token" data-controller="csrf-protection"
+                       value="{{ csrf_token('authenticate') }}">
             </label>
 
             <div class="mt-5">

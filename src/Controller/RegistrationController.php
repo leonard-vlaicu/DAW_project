@@ -43,14 +43,7 @@ class RegistrationController extends AbstractController {
             $entityManager->persist($user);
             $entityManager->flush();
 
-            // generate a signed url and email it to the user
-            $this->emailVerifier->sendEmailConfirmation('app_verify_email', $user,
-                (new TemplatedEmail())
-                    ->from(new Address('no-reply@vla-library.it.com', 'VLA - Library'))
-                    ->to((string)$user->getEmail())
-                    ->subject('Please Confirm your Email')
-                    ->htmlTemplate('registration/email_confirmation.html.twig')
-            );
+            $this->sendVerificationEmail($user);
 
             return $this->render('registration/post_register.html.twig');
         }
@@ -65,8 +58,9 @@ class RegistrationController extends AbstractController {
         try {
             $user = $this->userRepository->findBySignature($request->get('signature'));
             $this->emailVerifier->handleEmailConfirmation($request, $user);
-        } catch (VerifyEmailExceptionInterface $exception) {
-            $this->addFlash('verify_email_error', $translator->trans($exception->getReason(), [], 'VerifyEmailBundle'));
+        } catch (VerifyEmailExceptionInterface) {
+            $this->addFlash('verify_email_error', "The link to verify your email has expired. A new link has been sent.");
+            $this->sendVerificationEmail($user);
 
             return $this->redirectToRoute('app_register');
         }
@@ -74,5 +68,15 @@ class RegistrationController extends AbstractController {
         $this->addFlash('success', 'Your email address has been verified.');
 
         return $this->redirectToRoute('app_register');
+    }
+
+    private function sendVerificationEmail(User $user): void {
+        $this->emailVerifier->sendEmailConfirmation('app_verify_email', $user,
+            (new TemplatedEmail())
+                ->from(new Address('no-reply@vla-library.it.com', 'VLA - Library'))
+                ->to((string)$user->getEmail())
+                ->subject('Please Confirm your Email')
+                ->htmlTemplate('registration/email_confirmation.html.twig')
+        );
     }
 }

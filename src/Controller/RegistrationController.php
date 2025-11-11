@@ -6,13 +6,12 @@ use App\Entity\User;
 use App\Form\RegistrationFormType;
 use App\Repository\UserRepository;
 use App\Security\EmailVerifier;
+use App\Utils\Utils;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Mime\Address;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
@@ -43,7 +42,7 @@ class RegistrationController extends AbstractController {
             $entityManager->persist($user);
             $entityManager->flush();
 
-            $this->sendVerificationEmail($user);
+            Utils::sendVerificationEmail($user, $this->emailVerifier);
 
             return $this->render('registration/post_register.html.twig');
         }
@@ -66,23 +65,13 @@ class RegistrationController extends AbstractController {
             }
         } catch (VerifyEmailExceptionInterface) {
             $this->addFlash('verify_email_error', "The link to verify your email has expired. A new link has been sent.");
-            $this->sendVerificationEmail($user);
 
+            Utils::sendVerificationEmail($user, $this->emailVerifier);
             return $this->redirectToRoute('app_register');
         }
 
         $this->addFlash('success', 'Your email address has been verified. You can now log in');
 
         return $this->redirectToRoute('app_login');
-    }
-
-    private function sendVerificationEmail(User $user): void {
-        $this->emailVerifier->sendEmailConfirmation('app_verify_email', $user,
-            (new TemplatedEmail())
-                ->from(new Address('no-reply@vla-library.it.com', 'VLA - Library'))
-                ->to((string)$user->getEmail())
-                ->subject('Please Confirm your Email')
-                ->htmlTemplate('registration/email_confirmation.html.twig')
-        );
     }
 }

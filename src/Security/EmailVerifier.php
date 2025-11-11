@@ -18,6 +18,16 @@ class EmailVerifier {
     ) {
     }
 
+    public function sendEmailResetPassword(string $verifyEmailRouteName, User $user, TemplatedEmail $email): void {
+        $signatureComponents = $this->verifyEmailHelper->generateSignature(
+            $verifyEmailRouteName,
+            (string)$user->getId(),
+            (string)$user->getEmail()
+        );
+
+
+    }
+
     public function sendEmailConfirmation(string $verifyEmailRouteName, User $user, TemplatedEmail $email): void {
         $signatureComponents = $this->verifyEmailHelper->generateSignature(
             $verifyEmailRouteName,

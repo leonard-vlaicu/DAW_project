@@ -16,8 +16,12 @@ class AuthenticationFailureHandler implements AuthenticationFailureHandlerInterf
 
     public function onAuthenticationFailure(Request $request, AuthenticationException $exception): Response {
         if ($exception instanceof AccountNotVerifiedException) {
+            $email = $request->getSession()->get('_username');
+
             $request->getSession()->getFlashBag()->add('error', $exception->getMessage());
+            $request->getSession()->set('unverified_email', $email);
         } else {
+            $request->getSession()->remove('unverified_email');
             $request->getSession()->getFlashBag()->add('error', 'Invalid credentials');
         }
 

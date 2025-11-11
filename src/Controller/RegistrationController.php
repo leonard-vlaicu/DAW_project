@@ -60,6 +60,7 @@ class RegistrationController extends AbstractController {
 
             if ($user === null) {
                 $this->addFlash('verify_email_error', "The link to verify your email is invalid.");
+                return $this->redirectToRoute('app_register');
             } else {
                 $this->emailVerifier->handleEmailConfirmation($request, $user);
             }

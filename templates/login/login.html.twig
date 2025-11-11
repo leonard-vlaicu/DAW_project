@@ -12,6 +12,12 @@
                 </div>
             {% endfor %}
 
+            {% for error in app.flashes('success') %}
+                <div class="alert alert-success alert-soft mb-10" role="alert">
+                    {{ error }}
+                </div>
+            {% endfor %}
+
             {% if error %}
                 <div class="alert alert-error alert-soft mb-10" role="alert">
                     {{ error.messageKey|trans(error.messageData, 'security') }}

@@ -57,7 +57,12 @@ class RegistrationController extends AbstractController {
     public function verifyUserEmail(Request $request, TranslatorInterface $translator): Response {
         try {
             $user = $this->userRepository->findBySignature($request->get('signature'));
-            $this->emailVerifier->handleEmailConfirmation($request, $user);
+
+            if ($user === null) {
+                $this->addFlash('verify_email_error', "The link to verify your email is invalid.");
+            } else {
+                $this->emailVerifier->handleEmailConfirmation($request, $user);
+            }
         } catch (VerifyEmailExceptionInterface) {
             $this->addFlash('verify_email_error', "The link to verify your email has expired. A new link has been sent.");
             $this->sendVerificationEmail($user);
@@ -65,9 +70,9 @@ class RegistrationController extends AbstractController {
             return $this->redirectToRoute('app_register');
         }
 
-        $this->addFlash('success', 'Your email address has been verified.');
+        $this->addFlash('success', 'Your email address has been verified. You can now log in');
 
-        return $this->redirectToRoute('app_register');
+        return $this->redirectToRoute('app_login');
     }
 
     private function sendVerificationEmail(User $user): void {

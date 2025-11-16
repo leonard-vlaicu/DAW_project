@@ -2,7 +2,7 @@
 
 namespace App\Security;
 
-use App\AccountNotVerifiedException;
+use App\Exceptions\AccountNotVerifiedException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;

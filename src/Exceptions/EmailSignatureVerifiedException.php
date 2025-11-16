@@ -1,11 +1,10 @@
 <?php
 
-namespace App;
+namespace App\Exceptions;
 
-use Symfony\Component\Security\Core\Exception\BadCredentialsException;
 use Throwable;
 
-class AccountNotVerifiedException extends BadCredentialsException {
+class EmailSignatureVerifiedException extends \Exception {
     public function __construct(string $message = "", int $code = 0, ?Throwable $previous = null) {
         parent::__construct($message, $code, $previous);
     }

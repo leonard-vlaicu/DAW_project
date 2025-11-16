@@ -2,7 +2,10 @@
 
 namespace App\Entity;
 
+use App\Entity\User\UserSignatures;
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -41,8 +44,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface {
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $phoneNumber = null;
 
-    #[ORM\Column(length: 512)]
-    private ?string $signature = null;
+    #[ORM\OneToMany(targetEntity: UserSignatures::class, mappedBy: 'user', cascade: ['persist'], orphanRemoval: true)]
+    private Collection $userSignature;
 
     public function getFirstName(): ?string {
         return $this->firstName;
@@ -68,15 +71,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface {
 
     public function setPhoneNumber(?string $phoneNumber): User {
         $this->phoneNumber = $phoneNumber;
-        return $this;
-    }
-
-    public function getSignature(): ?string {
-        return $this->signature;
-    }
-
-    public function setSignature(?string $signature): User {
-        $this->signature = $signature;
         return $this;
     }
 
@@ -150,5 +144,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface {
         $this->isVerified = $isVerified;
 
         return $this;
+    }
+
+    public function getUserSignature(): Collection {
+        return $this->userSignature;
+    }
+
+    public function setUserSignature(Collection $userSignature): User {
+        $this->userSignature = $userSignature;
+        return $this;
+    }
+
+    public function __construct() {
+        $this->userSignature = new ArrayCollection();
     }
 }

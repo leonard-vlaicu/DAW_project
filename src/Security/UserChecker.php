@@ -2,8 +2,8 @@
 
 namespace App\Security;
 
-use App\AccountNotVerifiedException;
 use App\Entity\User as AppUser;
+use App\Exceptions\AccountNotVerifiedException;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Security\Core\User\UserCheckerInterface;
 use Symfony\Component\Security\Core\User\UserInterface;

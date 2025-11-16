@@ -3,9 +3,11 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Exceptions\EmailSignatureVerifiedException;
+use App\Exceptions\InvalidEmailSignatureException;
 use App\Form\RegistrationFormType;
-use App\Repository\UserRepository;
 use App\Security\EmailVerifier;
+use App\Services\UserService;
 use App\Utils\Utils;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -14,13 +16,12 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Contracts\Translation\TranslatorInterface;
-use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
+use SymfonyCasts\Bundle\VerifyEmail\Exception\ExpiredSignatureException;
 
 class RegistrationController extends AbstractController {
 
     public function __construct(private EmailVerifier  $emailVerifier,
-                                private UserRepository $userRepository) {
+                                private UserService $userService) {
     }
 
     #[Route('/register', name: 'app_register')]
@@ -53,23 +54,14 @@ class RegistrationController extends AbstractController {
     }
 
     #[Route('/verify/email', name: 'app_verify_email')]
-    public function verifyUserEmail(Request $request, TranslatorInterface $translator): Response {
+    public function verifyUserEmail(Request $request): Response {
         try {
-            $user = $this->userRepository->findBySignature($request->get('signature'));
+            $this->emailVerifier->verifyEmailConfirmationFromRequest($request);
+        } catch (InvalidEmailSignatureException|EmailSignatureVerifiedException|ExpiredSignatureException $e) {
+            $this->addFlash('verify_email_error', $e->getMessage());
 
-            if ($user === null) {
-                $this->addFlash('verify_email_error', "The link to verify your email is invalid.");
-                return $this->redirectToRoute('app_register');
-            } else {
-                $this->emailVerifier->handleEmailConfirmation($request, $user);
-            }
-        } catch (VerifyEmailExceptionInterface) {
-            $this->addFlash('verify_email_error', "The link to verify your email has expired. A new link has been sent.");
-
-            Utils::sendVerificationEmail($user, $this->emailVerifier);
             return $this->redirectToRoute('app_register');
         }
-
         $this->addFlash('success', 'Your email address has been verified. You can now log in');
 
         return $this->redirectToRoute('app_login');

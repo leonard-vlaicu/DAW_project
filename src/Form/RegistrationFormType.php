@@ -55,8 +55,7 @@ class RegistrationFormType extends AbstractType
                     ]),
                 ],
                 'invalid_message' => 'Password values should match'
-            ])
-        ;
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void

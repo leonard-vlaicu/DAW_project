@@ -4,9 +4,9 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Exceptions\EmailSignatureVerifiedException;
-use App\Exceptions\InvalidEmailSignatureException;
+use App\Exceptions\InvalidSignatureException;
 use App\Form\RegistrationFormType;
-use App\Security\EmailVerifier;
+use App\Security\EmailService;
 use App\Services\UserService;
 use App\Utils\Utils;
 use Doctrine\ORM\EntityManagerInterface;
@@ -20,8 +20,8 @@ use SymfonyCasts\Bundle\VerifyEmail\Exception\ExpiredSignatureException;
 
 class RegistrationController extends AbstractController {
 
-    public function __construct(private EmailVerifier  $emailVerifier,
-                                private UserService $userService) {
+    public function __construct(private EmailService $emailService,
+                                private UserService  $userService) {
     }
 
     #[Route('/register', name: 'app_register')]
@@ -43,7 +43,7 @@ class RegistrationController extends AbstractController {
             $entityManager->persist($user);
             $entityManager->flush();
 
-            Utils::sendVerificationEmail($user, $this->emailVerifier);
+            Utils::sendVerificationEmail($user, $this->emailService);
 
             return $this->render('registration/post_register.html.twig');
         }
@@ -56,8 +56,8 @@ class RegistrationController extends AbstractController {
     #[Route('/verify/email', name: 'app_verify_email')]
     public function verifyUserEmail(Request $request): Response {
         try {
-            $this->emailVerifier->verifyEmailConfirmationFromRequest($request);
-        } catch (InvalidEmailSignatureException|EmailSignatureVerifiedException|ExpiredSignatureException $e) {
+            $this->emailService->verifyEmailConfirmationFromRequest($request);
+        } catch (InvalidSignatureException|EmailSignatureVerifiedException|ExpiredSignatureException $e) {
             $this->addFlash('verify_email_error', $e->getMessage());
 
             return $this->redirectToRoute('app_register');

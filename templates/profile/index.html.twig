@@ -1,0 +1,57 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Profile{% endblock %}
+
+{% block body %}
+
+    <div class="mt-20">
+        <div class="flex flex-col items-center justify-center align-middle h-full">
+            {% for error in app.flashes('error') %}
+                <div class="alert alert-error alert-soft mb-10">{{ error }}</div>
+            {% endfor %}
+
+            {% for message in app.flashes('success') %}
+                <div class="alert alert-success alert-soft mb-10">{{ message }}</div>
+            {% endfor %}
+
+            <h1 class="text-2xl mb-3 font-bold">Profile details</h1>
+
+            {{ form_start(profileForm) }}
+
+            <label class="input">
+                {{ form_widget(profileForm.email) }}
+            </label>
+
+            <label class="input mt-2">
+                {{ form_widget(profileForm.firstName,
+                    {'attr': {'placeholder': 'Enter your first name'}}) }}
+            </label>
+            <div class="text-error">
+                {{ form_errors(profileForm.firstName) }}
+            </div>
+
+            <label class="input mt-2">
+                {{ form_widget(profileForm.lastName,
+                    {'attr': {'placeholder': 'Enter your last name'}}) }}
+            </label>
+            <div class="text-error">
+                {{ form_errors(profileForm.lastName) }}
+            </div>
+
+            <label class="input mt-2">
+                {{ form_widget(profileForm.phoneNumber,
+                    {'attr': {'placeholder': 'Enter your phone number'}}) }}
+            </label>
+            <div class="text-error">
+                {{ form_errors(profileForm.phoneNumber) }}
+            </div>
+
+            <div class="mt-5">
+                <button type="submit" class="btn btn-primary">Update</button>
+            </div>
+
+            {{ form_end(profileForm) }}
+        </div>
+    </div>
+
+{% endblock %}

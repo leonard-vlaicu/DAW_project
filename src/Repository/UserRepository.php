@@ -9,6 +9,7 @@ use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 class UserRepository extends ServiceEntityRepository implements PasswordUpgraderInterface {
     public function __construct(ManagerRegistry $registry) {
@@ -57,7 +58,7 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ->getOneorNullResult();
     }
 
-    public function save(User $user): void {
+    public function save(User|UserInterface $user): void {
         $this->getEntityManager()->persist($user);
         $this->getEntityManager()->flush();
     }

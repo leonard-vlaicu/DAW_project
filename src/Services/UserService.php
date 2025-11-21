@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Entity\User;
 use App\Repository\UserRepository;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 class UserService {
     public function __construct(private UserRepository $userRepository) {
@@ -21,7 +22,7 @@ class UserService {
         return $this->userRepository->findOneByPasswordSignature($passwordSignature);
     }
 
-    public function save(User $user): void {
+    public function save(User|UserInterface $user): void {
         $this->userRepository->save($user);
     }
 }

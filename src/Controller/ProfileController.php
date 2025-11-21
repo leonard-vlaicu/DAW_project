@@ -22,7 +22,12 @@ class ProfileController extends AbstractController {
         }
 
         $user = $this->getUser();
-        $form = $this->createForm(UserFormType::class, $user);
+
+        $isAdmin = in_array('ROLE_ADMIN', $user->getRoles());
+
+        $form = $this->createForm(UserFormType::class, $user, [
+            'isAdmin' => $isAdmin
+        ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

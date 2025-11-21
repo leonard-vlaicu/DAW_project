@@ -34,9 +34,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface {
     #[ORM\Column]
     private bool $isVerified = false;
 
-    #[ORM\Column]
-    private bool $forcePasswordChange = false;
-
     #[ORM\Column(length: 255, nullable: true)]
     #[Assert\Regex(
         pattern: '/\d/',
@@ -85,14 +82,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface {
     public function setPhoneNumber(?string $phoneNumber): User {
         $this->phoneNumber = $phoneNumber;
         return $this;
-    }
-
-    public function isForcePasswordChange(): bool {
-        return $this->forcePasswordChange;
-    }
-
-    public function setForcePasswordChange(bool $forcePasswordChange): void {
-        $this->forcePasswordChange = $forcePasswordChange;
     }
 
     public function getId(): ?int {

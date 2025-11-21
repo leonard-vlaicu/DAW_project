@@ -19,14 +19,11 @@ class UserChecker implements UserCheckerInterface {
     }
 
     public function checkPostAuth(UserInterface $user): void {
-        $this->logger->debug("Checking user post");
-
         if (!$user instanceof AppUser) {
             return;
         }
 
         if (!$user->isVerified()) {
-            $this->logger->debug("Checking user not verified");
             throw new AccountNotVerifiedException("Your account is not verified. Please check your email for the verification link.");
         }
     }

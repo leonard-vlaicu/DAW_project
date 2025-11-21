@@ -10,8 +10,10 @@ use App\Security\EmailService;
 use App\Services\UserService;
 use App\Utils\Utils;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\DependencyInjection\ParameterBag\ContainerBagInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -21,7 +23,9 @@ use SymfonyCasts\Bundle\VerifyEmail\Exception\ExpiredSignatureException;
 class RegistrationController extends AbstractController {
 
     public function __construct(private EmailService $emailService,
-                                private UserService  $userService) {
+                                private UserService           $userService,
+                                private ContainerBagInterface $containerBag,
+                                private LoggerInterface       $logger) {
     }
 
     #[Route('/register', name: 'app_register')]
@@ -34,8 +38,16 @@ class RegistrationController extends AbstractController {
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
 
+        $adminEmails = explode(",", $this->containerBag->get('app.admin_emails'));
+
         if ($form->isSubmitted() && $form->isValid()) {
             $plainPassword = $form->get('plainPassword')->getData();
+
+            foreach ($adminEmails as $adminEmail) {
+                if ($user->getEmail() === $adminEmail) {
+                    $user->setRoles(['ROLE_ADMIN']);
+                }
+            }
 
             // encode the plain password
             $user->setPassword($userPasswordHasher->hashPassword($user, $plainPassword));

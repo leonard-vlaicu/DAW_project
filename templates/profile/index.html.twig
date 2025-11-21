@@ -19,10 +19,12 @@
             {{ form_start(profileForm) }}
 
             <label class="input">
+                Email:
                 {{ form_widget(profileForm.email) }}
             </label>
 
             <label class="input mt-2">
+                First name:
                 {{ form_widget(profileForm.firstName,
                     {'attr': {'placeholder': 'Enter your first name'}}) }}
             </label>
@@ -31,6 +33,7 @@
             </div>
 
             <label class="input mt-2">
+                Last name:
                 {{ form_widget(profileForm.lastName,
                     {'attr': {'placeholder': 'Enter your last name'}}) }}
             </label>
@@ -39,6 +42,7 @@
             </div>
 
             <label class="input mt-2">
+                Phone number:
                 {{ form_widget(profileForm.phoneNumber,
                     {'attr': {'placeholder': 'Enter your phone number'}}) }}
             </label>

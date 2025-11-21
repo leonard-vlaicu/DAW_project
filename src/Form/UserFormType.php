@@ -14,8 +14,11 @@ use Symfony\Component\Validator\Constraints\Length;
 
 class UserFormType extends AbstractType {
     public function buildForm(FormBuilderInterface $builder, array $options): void {
+        $isAdmin = $options['isAdmin'];
+
         $builder
             ->add('firstName', TextType::class, [
+                'disabled' => $isAdmin,
                 'trim' => true,
                 'constraints' => [
                     new Length([
@@ -25,6 +28,7 @@ class UserFormType extends AbstractType {
                 ]
             ])
             ->add('lastName', TextType::class, [
+                'disabled' => $isAdmin,
                 'trim' => true,
                 'constraints' => [
                     new Length([
@@ -34,18 +38,22 @@ class UserFormType extends AbstractType {
                 ]
             ])
             ->add('phoneNumber', TelType::class, [
+                'disabled' => $isAdmin,
                 'trim' => true,
                 'required' => false,
             ])
             ->add('email', TextType::class, [
-                'required' => false,
                 'disabled' => true,
+                'required' => false,
             ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void {
         $resolver->setDefaults([
             'data_class' => User::class,
+            'isAdmin' => 'false'
         ]);
+
+        $resolver->setAllowedTypes('isAdmin', 'bool');
     }
 }

@@ -30,7 +30,7 @@ class ProfileController extends AbstractController {
         ]);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid() && !$isAdmin) {
             $this->userService->save($user);
 
             $this->addFlash('success', 'Your profile has been updated successfully.');
@@ -38,6 +38,7 @@ class ProfileController extends AbstractController {
 
         return $this->render('profile/index.html.twig', [
             'profileForm' => $form->createView(),
+            'isAdmin' => $isAdmin
         ]);
     }
 }

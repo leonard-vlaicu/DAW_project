@@ -15,14 +15,14 @@
 </head>
 <body class="bg-base-300 h-screen">
 
-<div class="navbar shadow-md bg-base-100">
+<div class="navbar shadow-md bg-base-100 border-b-2 border-base-300">
     <div class="flex-1">
         <a class="btn btn-ghost text-xl" href="{{ path('app_main') }}">VL - Library</a>
     </div>
     <div class="flex-none">
         <ul class="menu menu-horizontal px-1">
             {% if is_granted('ROLE_ADMIN') %}
-                <li><a href="{{ path('app_admin_index') }}">Admin</a></li>
+                <li><a href="{{ path('app_admin_books') }}">Admin</a></li>
             {% endif %}
 
             <li><a href="{{ path('app_main') }}">Home</a></li>

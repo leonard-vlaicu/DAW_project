@@ -51,7 +51,7 @@
             </div>
 
             <div class="mt-5">
-                <button type="submit" class="btn btn-primary">Update</button>
+                <button type="submit" class="btn btn-primary" {% if isAdmin %}disabled{% endif %}>Update</button>
             </div>
 
             {{ form_end(profileForm) }}

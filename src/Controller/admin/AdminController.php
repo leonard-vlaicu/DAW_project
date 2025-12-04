@@ -24,7 +24,7 @@ class AdminController extends AbstractController {
 
     #[Route('/admin/authors', name: 'app_admin_authors')]
     public function authors(): Response {
-        return $this->render('admin/authors.html.twig');
+        return $this->render('admin/author/authors.html.twig');
     }
 
     #[Route('/admin/books', name: 'app_admin_books')]

@@ -6,7 +6,6 @@ namespace App\Form\admin;
 
 use App\Entity\Genre;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
@@ -26,10 +25,6 @@ class GenreFormType extends AbstractType {
                         'message' => 'Please enter a genre name',
                     ])
                 ]
-            ])
-            ->add('id', HiddenType::class, [
-                'mapped' => false,
-                'required' => false,
             ]);
     }
 

@@ -50,10 +50,10 @@ jobs:
                         fi
 
                         # Install composer dependencies
-                        composer install --no-dev --optimize-autoloader --no-interaction
+                        composer install --optimize-autoloader --no-interaction
 
                         # Clear cache
-                        php bin/console cache:clear --env=prod --no-interaction
+                        php bin/console cache:clear --env=dev --no-interaction
 
                         # Run migrations (optional, uncomment if needed)
                         # php bin/console doctrine:migrations:migrate --no-interaction

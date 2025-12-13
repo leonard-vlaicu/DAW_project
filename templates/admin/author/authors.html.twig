@@ -1,0 +1,58 @@
+{% extends 'admin/index.html.twig' %}
+
+{% block title %}Authors{% endblock %}
+
+{% block manage_content %}
+    {% for error in app.flashes('error') %}
+        <div class="alert alert-error alert-soft mb-10">{{ error }}</div>
+    {% endfor %}
+
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success alert-soft mb-10">{{ message }}</div>
+    {% endfor %}
+
+    <h1 class="text-2xl mb-5">Authors</h1>
+
+    <a class="" href="{{ path('app_admin_authors_add') }}">
+        <button class="btn btn-primary">Add new author</button>
+    </a>
+
+    <div class="mt-5 rounded-box border border-base-content/5 bg-base-200">
+        <table class="table">
+            <!-- head -->
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>First name</th>
+                <th>Last name</th>
+                <th></th>
+                <th></th>
+            </tr>
+            </thead>
+
+            <tbody>
+            {% for author in authors %}
+                <tr class="hover:bg-base-100 transition duration-200 ease-in-out">
+                    <th>{{ author.id }}</th>
+                    <th>{{ author.firstName }}</th>
+                    <th>{{ author.lastName }}</th>
+                    <th>
+                        <a href="{{ path('app_admin_authors_edit', {'id': author.id}) }}">
+                            <button class="btn btn-secondary">Edit</button>
+                        </a>
+                    </th>
+                    <th>
+                        <a href="{{ path('app_admin_authors_delete', {'id': author.id}) }}">
+                            <button class="btn btn-error">Delete</button>
+                        </a>
+                    </th>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
+
+
+
+

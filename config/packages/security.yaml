@@ -20,10 +20,12 @@ security:
                 login_path: app_login
                 check_path: app_login
                 enable_csrf: true
+                failure_handler: App\Security\AuthenticationFailureHandler
             logout:
                 path: app_logout
                 # where to redirect after logout
                 # target: app_any_route
+            user_checker: App\Security\UserChecker
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#the-firewall
@@ -38,8 +40,8 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
-        # - { path: ^/admin, roles: ROLE_ADMIN }
-        # - { path: ^/profile, roles: ROLE_USER }
+        - { path: ^/admin, roles: ROLE_ADMIN }
+        - { path: ^/profile, roles: ROLE_USER }
 
 when@test:
     security:

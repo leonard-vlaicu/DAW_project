@@ -1,6 +1,7 @@
 
 @import "tailwindcss";
 @plugin "daisyui" {
-    themes: dracula --default;
+    themes: light --default --prefersdark, dracula --prefersdark
+;
 }
 @source not "../../public";

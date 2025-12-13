@@ -1,0 +1,53 @@
+{% extends 'admin/index.html.twig' %}
+
+{% block title %}Add author{% endblock %}
+
+{% block manage_content %}
+    {% for error in app.flashes('error') %}
+        <div class="alert alert-error alert-soft mb-10">{{ error }}</div>
+    {% endfor %}
+
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success alert-soft mb-10">{{ message }}</div>
+    {% endfor %}
+
+    <h1 class="text-2xl">Add new author</h1>
+
+    <div class="">
+        <div class="">
+            <div class="flex justify-start">
+                {{ form_start(addAuthorForm) }}
+
+                <div class="form-control mt-4">
+                    <label class="input">
+                        First name:
+                        {{ form_widget(addAuthorForm.firstName,
+                            {'attr': {'placeholder': 'Enter author first name'}}) }}
+                    </label>
+                    <div class="text-error mt-1">
+                        {{ form_errors(addAuthorForm.firstName) }}
+                    </div>
+                </div>
+
+                <div class="form-control mt-4">
+                    <label class="input">
+                        Last name:
+                        {{ form_widget(addAuthorForm.lastName,
+                            {'attr': {'placeholder': 'Enter author last name'}}) }}
+                    </label>
+                    <div class="text-error mt-1">
+                        {{ form_errors(addAuthorForm.lastName) }}
+                    </div>
+                </div>
+
+                <div class="mt-4">
+                    <button type="submit" class="btn btn-primary">Add</button>
+                    <a href="{{ path('app_admin_authors') }}" class="btn btn-accent">Cancel</a>
+                </div>
+
+                {{ form_end(addAuthorForm) }}
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

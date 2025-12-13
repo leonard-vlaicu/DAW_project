@@ -3,25 +3,29 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Exceptions\EmailSignatureVerifiedException;
+use App\Exceptions\InvalidSignatureException;
 use App\Form\RegistrationFormType;
-use App\Repository\UserRepository;
-use App\Security\EmailVerifier;
+use App\Security\EmailService;
+use App\Services\UserService;
+use App\Utils\Utils;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bridge\Twig\Mime\TemplatedEmail;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
+use Symfony\Component\DependencyInjection\ParameterBag\ContainerBagInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Mime\Address;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Contracts\Translation\TranslatorInterface;
-use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
+use SymfonyCasts\Bundle\VerifyEmail\Exception\ExpiredSignatureException;
 
 class RegistrationController extends AbstractController {
 
-    public function __construct(private EmailVerifier  $emailVerifier,
-                                private UserRepository $userRepository) {
+    public function __construct(private EmailService $emailService,
+                                private UserService           $userService,
+                                private ContainerBagInterface $containerBag,
+                                private LoggerInterface       $logger) {
     }
 
     #[Route('/register', name: 'app_register')]
@@ -34,8 +38,16 @@ class RegistrationController extends AbstractController {
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
 
+        $adminEmails = explode(",", $this->containerBag->get('app.admin_emails'));
+
         if ($form->isSubmitted() && $form->isValid()) {
             $plainPassword = $form->get('plainPassword')->getData();
+
+            foreach ($adminEmails as $adminEmail) {
+                if ($user->getEmail() === $adminEmail) {
+                    $user->setRoles(['ROLE_ADMIN']);
+                }
+            }
 
             // encode the plain password
             $user->setPassword($userPasswordHasher->hashPassword($user, $plainPassword));
@@ -43,14 +55,7 @@ class RegistrationController extends AbstractController {
             $entityManager->persist($user);
             $entityManager->flush();
 
-            // generate a signed url and email it to the user
-            $this->emailVerifier->sendEmailConfirmation('app_verify_email', $user,
-                (new TemplatedEmail())
-                    ->from(new Address('no-reply@vla-library.it.com', 'VLA - Library'))
-                    ->to((string)$user->getEmail())
-                    ->subject('Please Confirm your Email')
-                    ->htmlTemplate('registration/email_confirmation.html.twig')
-            );
+            Utils::sendVerificationEmail($user, $this->emailService);
 
             return $this->render('registration/post_register.html.twig');
         }
@@ -61,18 +66,16 @@ class RegistrationController extends AbstractController {
     }
 
     #[Route('/verify/email', name: 'app_verify_email')]
-    public function verifyUserEmail(Request $request, TranslatorInterface $translator): Response {
+    public function verifyUserEmail(Request $request): Response {
         try {
-            $user = $this->userRepository->findBySignature($request->get('signature'));
-            $this->emailVerifier->handleEmailConfirmation($request, $user);
-        } catch (VerifyEmailExceptionInterface $exception) {
-            $this->addFlash('verify_email_error', $translator->trans($exception->getReason(), [], 'VerifyEmailBundle'));
+            $this->emailService->verifyEmailConfirmationFromRequest($request);
+        } catch (InvalidSignatureException|EmailSignatureVerifiedException|ExpiredSignatureException $e) {
+            $this->addFlash('verify_email_error', $e->getMessage());
 
             return $this->redirectToRoute('app_register');
         }
+        $this->addFlash('success', 'Your email address has been verified. You can now log in');
 
-        $this->addFlash('success', 'Your email address has been verified.');
-
-        return $this->redirectToRoute('app_register');
+        return $this->redirectToRoute('app_login');
     }
 }

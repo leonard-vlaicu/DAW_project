@@ -1,0 +1,11 @@
+{% extends 'admin/index.html.twig' %}
+
+{% block title %}Edit book{% endblock %}
+
+{% block manage_content %}
+    {% include 'admin/books/_book_form.html.twig' with {
+        'form': editBookForm,
+        'title': 'Edit book',
+        'submitButtonText': 'Update'
+    } %}
+{% endblock %}

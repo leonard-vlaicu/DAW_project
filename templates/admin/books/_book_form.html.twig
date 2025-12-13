@@ -1,0 +1,134 @@
+{% for error in app.flashes('error') %}
+    <div class="alert alert-error alert-soft mb-10">{{ error }}</div>
+{% endfor %}
+
+{% for message in app.flashes('success') %}
+    <div class="alert alert-success alert-soft mb-10">{{ message }}</div>
+{% endfor %}
+
+<h1 class="text-2xl mb-6">{{ title }}</h1>
+
+<div class="max-w-2xl">
+    {{ form_start(form) }}
+
+    <div class="space-y-4">
+        <div class="form-control">
+            <label class="label">
+                <span class="label-text font-medium">Book title:</span>
+            </label>
+            {{ form_widget(form.title, {
+                'attr': {
+                    'class': 'input input-bordered w-full',
+                    'placeholder': 'Enter book title'
+                }
+            }) }}
+            <div class="text-error text-sm mt-1">
+                {{ form_errors(form.title) }}
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="form-control">
+                <label class="label">
+                    <span class="label-text font-medium">Year of publication:</span>
+                </label>
+                {{ form_widget(form.year, {
+                    'attr': {
+                        'class': 'input input-bordered w-full',
+                        'placeholder': 'e.g. 2024'
+                    }
+                }) }}
+                <div class="text-error text-sm mt-1">
+                    {{ form_errors(form.year) }}
+                </div>
+            </div>
+
+            <div class="form-control">
+                <label class="label">
+                    <span class="label-text font-medium">Pages:</span>
+                </label>
+                {{ form_widget(form.pages, {
+                    'attr': {
+                        'class': 'input input-bordered w-full',
+                        'placeholder': 'Number of pages'
+                    }
+                }) }}
+                <div class="text-error text-sm mt-1">
+                    {{ form_errors(form.pages) }}
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="form-control">
+                <label class="label">
+                    <span class="label-text font-medium">ISBN:</span>
+                </label>
+                {{ form_widget(form.isbn, {
+                    'attr': {
+                        'class': 'input input-bordered w-full',
+                        'placeholder': '13-digit ISBN'
+                    }
+                }) }}
+                <div class="text-error text-sm mt-1">
+                    {{ form_errors(form.isbn) }}
+                </div>
+            </div>
+
+            <div class="form-control">
+                <label class="label">
+                    <span class="label-text font-medium">Copies:</span>
+                </label>
+                {{ form_widget(form.copies, {
+                    'attr': {
+                        'class': 'input input-bordered w-full',
+                        'placeholder': 'Number of copies'
+                    }
+                }) }}
+                <div class="text-error text-sm mt-1">
+                    {{ form_errors(form.copies) }}
+                </div>
+            </div>
+        </div>
+
+        <div class="form-control">
+            <label class="label">
+                <span class="label-text font-medium">Genres:</span>
+            </label>
+            {{ form_widget(form.genres, {
+                'attr': {
+                    'class': 'select select-bordered w-full',
+                    'size': '5'
+                }
+            }) }}
+            <div class="label">
+                <span class="label-text-alt">Hold Ctrl/Cmd to select multiple</span>
+            </div>
+            <div class="text-error text-sm mt-1">
+                {{ form_errors(form.genres) }}
+            </div>
+        </div>
+
+        <div class="form-control">
+            <label class="label">
+                <span class="label-text font-medium">Authors:</span>
+            </label>
+            {{ form_widget(form.authors, {
+                'attr': {
+                    'class': 'select select-bordered w-full',
+                    'size': '5'
+                }
+            }) }}
+            <div class="text-error text-sm mt-1">
+                {{ form_errors(form.authors) }}
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-6 flex gap-3">
+        <button type="submit" class="btn btn-primary">{{ submitButtonText }}</button>
+        <a href="{{ path('app_admin_books') }}" class="btn btn-accent">Cancel</a>
+    </div>
+
+    {{ form_end(form) }}
+</div>

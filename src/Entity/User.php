@@ -2,15 +2,20 @@
 
 namespace App\Entity;
 
+use App\Entity\User\UserSignatures;
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
 #[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
+#[UniqueEntity(fields: ['phoneNumber'], message: 'There is already an account with this phone number')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -29,20 +34,28 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface {
     #[ORM\Column]
     private bool $isVerified = false;
 
-    #[ORM\Column]
-    private bool $forcePasswordChange = false;
-
     #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\Regex(
+        pattern: '/\d/',
+        message: 'Your first name cannot contain a number',
+        match: false,
+    )]
     private ?string $firstName = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\Regex(
+        pattern: '/\d/',
+        message: 'Your last name cannot contain a number',
+        match: false,
+    )]
     private ?string $lastName = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\Regex("/\d*$/")]
     private ?string $phoneNumber = null;
 
-    #[ORM\Column(length: 512)]
-    private ?string $signature = null;
+    #[ORM\OneToMany(targetEntity: UserSignatures::class, mappedBy: 'user', cascade: ['persist'], orphanRemoval: true)]
+    private Collection $userSignature;
 
     public function getFirstName(): ?string {
         return $this->firstName;
@@ -69,23 +82,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface {
     public function setPhoneNumber(?string $phoneNumber): User {
         $this->phoneNumber = $phoneNumber;
         return $this;
-    }
-
-    public function getSignature(): ?string {
-        return $this->signature;
-    }
-
-    public function setSignature(?string $signature): User {
-        $this->signature = $signature;
-        return $this;
-    }
-
-    public function isForcePasswordChange(): bool {
-        return $this->forcePasswordChange;
-    }
-
-    public function setForcePasswordChange(bool $forcePasswordChange): void {
-        $this->forcePasswordChange = $forcePasswordChange;
     }
 
     public function getId(): ?int {
@@ -150,5 +146,30 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface {
         $this->isVerified = $isVerified;
 
         return $this;
+    }
+
+    public function getUserSignature(): Collection {
+        return $this->userSignature;
+    }
+
+    public function addUserSignature(UserSignatures $userSignature): self {
+        if (!$this->userSignature->contains($userSignature)) {
+            $this->userSignature->add($userSignature);
+            $userSignature->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUserSignature(UserSignatures $userSignature): self {
+        if ($this->userSignature->removeElement($userSignature) && $userSignature->getUser() === $this) {
+            $userSignature->setUser(null);
+        }
+
+        return $this;
+    }
+
+    public function __construct() {
+        $this->userSignature = new ArrayCollection();
     }
 }

@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Admin{% endblock %}
+
+{% block body %}
+
+    <div class="drawer lg:drawer-open">
+        <input id="my-drawer-4" type="checkbox" class="drawer-toggle"/>
+        <div class="drawer-content">
+            <div class="p-4">
+                {% block manage_content %}
+                {% endblock %}
+            </div>
+        </div>
+
+        <div class="drawer-side is-drawer-close:overflow-visible">
+            <label for="my-drawer-4" aria-label="close sidebar" class="drawer-overlay"></label>
+            <div class="flex min-h-full flex-col items-start bg-base-100">
+                <ul class="menu w-full grow">
+                    <li><a href="{{ path('app_admin_books') }}">Books</a></li>
+                    <li><a href="{{ path('app_admin_genres') }}">Genres</a></li>
+                    <li><a href="{{ path('app_admin_authors') }}">Authors</a></li>
+                    <li><a href="{{ path('app_admin_users') }}">Users</a></li>
+                    <li><a href="{{ path('app_admin_bookings') }}">Bookings</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

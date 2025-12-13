@@ -3,15 +3,14 @@
 namespace App\Repository;
 
 use App\Entity\User;
+use App\Entity\User\SignatureType;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Security\Core\Exception\UnsupportedUserException;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
-/**
- * @extends ServiceEntityRepository<User>
- */
 class UserRepository extends ServiceEntityRepository implements PasswordUpgraderInterface {
     public function __construct(ManagerRegistry $registry) {
         parent::__construct($registry, User::class);
@@ -30,11 +29,37 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $this->getEntityManager()->flush();
     }
 
-    public function findBySignature($signature): ?User {
+    public function findOneByPasswordSignature($signature): ?User {
+        $type = SignatureType::PASSWORD;
+
         return $this->createQueryBuilder('u')
-            ->andWhere('u.signature = :signature')
+            ->innerJoin('u.userSignature', 'us')
+            ->addSelect('us')
+            ->andWhere('us.signature = :signature')
+            ->andWhere('us.type = :type')
             ->setParameter('signature', $signature)
+            ->setParameter('type', $type)
             ->getQuery()
             ->getOneorNullResult();
+    }
+
+
+    public function findOneByEmailSignature($signature): ?User {
+        $type = SignatureType::EMAIL;
+
+        return $this->createQueryBuilder('u')
+            ->innerJoin('u.userSignature', 'us')
+            ->addSelect('us')
+            ->andWhere('us.signature = :signature')
+            ->andWhere('us.type = :type')
+            ->setParameter('signature', $signature)
+            ->setParameter('type', $type)
+            ->getQuery()
+            ->getOneorNullResult();
+    }
+
+    public function save(User|UserInterface $user): void {
+        $this->getEntityManager()->persist($user);
+        $this->getEntityManager()->flush();
     }
 }

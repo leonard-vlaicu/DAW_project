@@ -1,0 +1,42 @@
+{% extends 'admin/index.html.twig' %}
+
+{% block title %}Add genre{% endblock %}
+
+{% block manage_content %}
+    {% for error in app.flashes('error') %}
+        <div class="alert alert-error alert-soft mb-10">{{ error }}</div>
+    {% endfor %}
+
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success alert-soft mb-10">{{ message }}</div>
+    {% endfor %}
+
+    <h1 class="text-2xl">Add new genre</h1>
+
+    <div class="">
+        <div class="">
+            <div class="flex justify-start">
+                {{ form_start(addGenreForm) }}
+
+                <div class="form-control mt-4">
+                    <label class="input">
+                        Genre name:
+                        {{ form_widget(addGenreForm.name,
+                            {'attr': {'placeholder': 'Enter genre name'}}) }}
+                    </label>
+                    <div class="text-error mt-1">
+                        {{ form_errors(addGenreForm.name) }}
+                    </div>
+                </div>
+
+                <div class="mt-4">
+                    <button type="submit" class="btn btn-primary">Add</button>
+                    <a href="{{ path('app_admin_genres') }}" class="btn btn-accent">Cancel</a>
+                </div>
+
+                {{ form_end(addGenreForm) }}
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

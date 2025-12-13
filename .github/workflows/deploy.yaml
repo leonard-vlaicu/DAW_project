@@ -27,7 +27,7 @@ jobs:
                     password: ${{ secrets.W1_PASSWORD }}
 
                     script: |
-                        cd ~/public_html/
+                        cd ~/
 
                         # Initialize git repository if it doesn't exist
                         if [ ! -d .git ]; then

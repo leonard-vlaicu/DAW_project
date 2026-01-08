@@ -57,6 +57,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface {
     #[ORM\OneToMany(targetEntity: UserSignatures::class, mappedBy: 'user', cascade: ['persist'], orphanRemoval: true)]
     private Collection $userSignature;
 
+    #[ORM\OneToMany(targetEntity: Booking::class, mappedBy: 'user', cascade: ['persist', 'remove'], orphanRemoval: true)]
+    private Collection $bookings;
+
     public function getFirstName(): ?string {
         return $this->firstName;
     }
@@ -169,7 +172,25 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface {
         return $this;
     }
 
+    public function getBookings(): Collection {
+        return $this->bookings;
+    }
+
+    public function addBooking(Booking $booking): static {
+        if (!$this->bookings->contains($booking)) {
+            $this->bookings[] = $booking;
+        }
+        return $this;
+    }
+
+    public function removeBooking(Booking $booking): static {
+        $this->bookings->removeElement($booking);
+
+        return $this;
+    }
+
     public function __construct() {
         $this->userSignature = new ArrayCollection();
+        $this->bookings = new ArrayCollection();
     }
 }

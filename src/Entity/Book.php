@@ -16,31 +16,42 @@ class Book {
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
+
     #[ORM\Column(length: 64)]
     private ?string $title = null;
+
     #[ORM\Column]
     #[Assert\Regex("/\d*$/")]
     #[Assert\GreaterThanOrEqual(1500)]
     private ?int $year;
+
     #[ORM\Column]
     #[Assert\Regex("/\d*$/")]
     #[Assert\GreaterThanOrEqual(1)]
     private ?int $pages;
+
     #[ORM\Column(length: 13)]
     #[Assert\Regex("/\d*$/")]
     private ?string $isbn;
+
     #[ORM\Column]
     private ?int $copies;
+
     #[ORM\ManyToMany(targetEntity: Genre::class, inversedBy: 'books', cascade: ['persist'])]
     #[ORM\JoinTable(name: 'book_genre')]
     private Collection $genres;
+
     #[ORM\ManyToMany(targetEntity: Author::class, inversedBy: 'books', cascade: ['persist'])]
     #[ORM\JoinTable(name: 'book_author')]
     private Collection $authors;
 
+    #[ORM\OneToMany(targetEntity: Booking::class, mappedBy: 'book')]
+    private Collection $bookings;
+
     public function __construct() {
         $this->genres = new ArrayCollection();
         $this->authors = new ArrayCollection();
+        $this->bookings = new ArrayCollection();
     }
 
     public function getId(): ?int {
@@ -124,6 +135,23 @@ class Book {
 
     public function removeAuthor(Author $author): static {
         $this->authors->removeElement($author);
+
+        return $this;
+    }
+
+    public function getBookings(): Collection {
+        return $this->bookings;
+    }
+
+    public function addBooking(Booking $booking): static {
+        if (!$this->bookings->contains($booking)) {
+            $this->bookings[] = $booking;
+        }
+        return $this;
+    }
+
+    public function removeBooking(Booking $booking): static {
+        $this->bookings->removeElement($booking);
 
         return $this;
     }

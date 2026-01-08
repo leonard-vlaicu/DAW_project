@@ -17,58 +17,6 @@
         <button class="btn btn-primary">Add new book</button>
     </a>
 
-    <div class="mt-5 rounded-box border border-base-content/5 bg-base-200">
-        <table class="table">
-            <!-- head -->
-            <thead>
-            <tr>
-                <th>ID</th>
-                <th>Title</th>
-                <th>Author(s)</th>
-                <th>Pages</th>
-                <th>Genre(s)</th>
-                <th>Copies</th>
-                <th>ISBN</th>
-                <th></th>
-                <th></th>
-            </tr>
-            </thead>
-
-            <tbody>
-            {% for book in books %}
-                <tr class="hover:bg-base-100 transition duration-200 ease-in-out">
-                    <th>{{ book.id }}</th>
-                    <th>{{ book.title }}</th>
-                    <th>
-                        {% for author in book.authors %}
-                            <span class="badge bg-base-content text-black mr-2">
-                                {{ author.firstName }} {{ author.lastName }}
-                            </span>
-                        {% endfor %}
-                    </th>
-                    <th>{{ book.pages }}</th>
-                    <th>
-                        {% for genre in book.genres %}
-                            <span class="badge badge-accent mr-2">
-                                {{ genre.name }}
-                            </span>
-                        {% endfor %}
-                    </th>
-                    <th>{{ book.copies }}</th>
-                    <th>{{ book.isbn }}</th>
-                    <th>
-                        <a href="{{ path('app_admin_books_edit', {'id': book.id}) }}">
-                            <button class="btn btn-secondary">Edit</button>
-                        </a>
-                    </th>
-                    <th>
-                        <a href="{{ path('app_admin_books_delete', {'id': book.id}) }}">
-                            <button class="btn btn-error">Delete</button>
-                        </a>
-                    </th>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-    </div>
+    {% include 'components/_books_table.html.twig'
+        with {'books': books, 'show_admin_actions': true, 'show_user_actions': false} %}
 {% endblock %}

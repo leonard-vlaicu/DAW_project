@@ -7,6 +7,14 @@
 {% block body %}
 
     <div class="m-4">
+        {% for error in app.flashes('error') %}
+            <div class="alert alert-error alert-soft mb-10">{{ error }}</div>
+        {% endfor %}
+
+        {% for message in app.flashes('success') %}
+            <div class="alert alert-success alert-soft mb-10">{{ message }}</div>
+        {% endfor %}
+
         <h1 class="text-4xl font-bold">Book listing</h1>
         <div class="divider"></div>
 

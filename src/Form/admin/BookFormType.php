@@ -16,14 +16,11 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Length;
 
 class BookFormType extends AbstractType {
-    public function buildForm(FormBuilderInterface $builder, array $options) {
+    public function buildForm(FormBuilderInterface $builder, array $options): void {
         $builder
             ->add('title', TextType::class, [
                 'constraints' => [
-                    new Length([
-                        'max' => 255,
-                        'maxMessage' => 'The title cannot be longer than {{ limit }} characters',
-                    ])
+                    new Length(max: 255, maxMessage: 'The title cannot be longer than {{ limit }} characters')
                 ],
                 'required' => true,
             ])
@@ -35,11 +32,7 @@ class BookFormType extends AbstractType {
             ])
             ->add('isbn', TextType::class, [
                 'constraints' => [
-                    new Length([
-                        'max' => 13,
-                        'min' => 13,
-                        'exactMessage' => 'The ISBN must be exactly 13 characters long',
-                    ])
+                    new Length(min: 13, max: 13, exactMessage: 'The ISBN must be exactly 13 characters long')
                 ]
             ])
             ->add('copies', IntegerType::class, [

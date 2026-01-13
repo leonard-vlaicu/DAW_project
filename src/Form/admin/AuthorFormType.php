@@ -17,24 +17,14 @@ class AuthorFormType extends AbstractType {
         $builder
             ->add('firstName', TextType::class, [
                 'constraints' => [
-                    new Length([
-                        'max' => 64,
-                        'maxMessage' => 'The first name cannot be longer than {{ limit }} characters',
-                    ]),
-                    new NotBlank([
-                        'message' => 'Please enter a first name',
-                    ])
+                    new Length(max: 64, maxMessage: 'The first name cannot be longer than {{ limit }} characters'),
+                    new NotBlank(message: 'Please enter a first name')
                 ]
             ])
             ->add('lastName', TextType::class, [
                 'constraints' => [
-                    new Length([
-                        'max' => 64,
-                        'maxMessage' => 'The last name cannot be longer than {{ limit }} characters',
-                    ]),
-                    new NotBlank([
-                        'message' => 'Please enter a last name',
-                    ])
+                    new Length(max: 64, maxMessage: 'The last name cannot be longer than {{ limit }} characters'),
+                    new NotBlank(message: 'Please enter a last name')
                 ]
             ]);
     }

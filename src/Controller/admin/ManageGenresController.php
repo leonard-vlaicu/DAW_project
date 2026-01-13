@@ -13,7 +13,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-class GenreController extends AbstractController {
+class ManageGenresController extends AbstractController {
     public function __construct(private GenreService $genreService, private LoggerInterface $logger) {
     }
 

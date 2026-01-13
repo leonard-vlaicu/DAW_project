@@ -55,9 +55,7 @@ class Booking {
     }
 
     public function setBook(?Book $book): Booking {
-        if ($book !== null && !$book->getBookings()->contains($this)) {
-            $book->addBooking($this);
-        }
+        $this->book = $book;
 
         return $this;
     }
@@ -67,9 +65,7 @@ class Booking {
     }
 
     public function setUser(?User $user): Booking {
-        if ($user !== null && !$user->getBookings()->contains($this)) {
-            $user->addBooking($this);
-        }
+        $this->user = $user;
 
         return $this;
     }

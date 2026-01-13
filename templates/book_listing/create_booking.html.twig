@@ -1,0 +1,68 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    VLA - Library | Create booking
+{% endblock %}
+
+{% block body %}
+    <div class="m-4">
+        <h1 class="text-4xl font-bold">Create booking</h1>
+        <div class="divider"></div>
+
+        <div class="max-w-2xl">
+            {{ form_start(createBookingForm) }}
+
+            <div class="space-y-4">
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text font-medium">Book: {{ book.title }}</span>
+                    </label>
+                </div>
+
+                <div class="sr-only" aria-hidden="true">
+                    {{ form_widget(createBookingForm.beginDate, {
+                        'attr': {
+                            'tabindex': '-1'
+                        }
+                    }) }}
+                    {{ form_widget(createBookingForm.endDate, {
+                        'attr': {
+                            'tabindex': '-1'
+                        }
+                    }) }}
+                </div>
+
+                <div class="form-control">
+                    <label class="label">
+                        <span class="label-text font-medium">Booking Period:</span>
+                    </label>
+                    <input
+                        type="text"
+                        id="booking-range"
+                        class="input input-bordered w-full"
+                        placeholder="Select booking dates"
+                        data-controller="datepicker"
+                        data-datepicker-mode-value="range"
+                        data-datepicker-min-date-value="today"
+                        data-datepicker-target-begin-value="#{{ createBookingForm.beginDate.vars.id }}"
+                        data-datepicker-target-end-value="#{{ createBookingForm.endDate.vars.id }}"
+                        data-datepicker-book-id-value="{{ book.id }}"
+                        data-datepicker-unavailable-dates-url-value="{{ path('app_booking_unavailable_dates', {'id': book.id}) }}"
+                    />
+                </div>
+                <div class="text-error text-sm mt-1">
+                    {{ form_errors(createBookingForm.beginDate) }}
+                    {{ form_errors(createBookingForm.endDate) }}
+                </div>
+            </div>
+
+            <div class="mt-6 flex gap-3">
+                <button type="submit" class="btn btn-primary">Create booking</button>
+                <a href="{{ path('app_book_listing') }}" class="btn btn-accent">Cancel</a>
+            </div>
+
+            {{ form_end(createBookingForm) }}
+        </div>
+    </div>
+
+{% endblock %}

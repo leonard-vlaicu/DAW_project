@@ -4,4 +4,4 @@
     themes: light --default --prefersdark, dracula --prefersdark
 ;
 }
-@source not "../../public_html";
+@source not "../../public";

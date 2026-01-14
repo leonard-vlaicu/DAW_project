@@ -57,7 +57,9 @@ class RegistrationController extends AbstractController {
 
             Utils::sendVerificationEmail($user, $this->emailService);
 
-            return $this->render('registration/post_register.html.twig');
+            $this->addFlash('success', 'Please check your email to verify your account.');
+
+            return $this->redirectToRoute('app_login');
         }
 
         return $this->render('registration/register.html.twig', [

@@ -36,26 +36,28 @@ jobs:
                             git remote add origin git@github.com:leonard-vlaicu/DAW_project.git
                         fi
 
-                        # Pull latest changes
+                        # Pull latest changes (this will include .env.prod from git)
                         git fetch --all
                         git reset --hard origin/master
 
-                        # Backup and create .env files only if .env exists
-                        if [ -f .env ]; then
-                            cp .env .env.backup
-                            cp .env .env.local
-                            cp .env .env.test
-                        else
-                            echo "Warning: .env file not found. Please create it manually on the server."
-                        fi
+                        # Create .env.prod.local with actual secret values
+                        # These will override any placeholders in .env.prod
+                        cat > .env.prod.local << 'EOF'
+                        APP_SECRET=${{ secrets.APP_SECRET }}
+                        MAILER_DSN=${{ secrets.MAILER_DSN }}
+                        DATABASE_URL=${{ secrets.DATABASE_URL }}
+                        EOF
 
                         # Install composer dependencies
                         composer install --no-dev --optimize-autoloader --no-interaction
 
-                        # Clear cache
-                        php bin/console cache:clear --env=dev --no-interaction
+                        # Clear cache for production
+                        APP_ENV=prod php bin/console cache:clear --no-interaction
+
+                        # Warm up cache
+                        APP_ENV=prod php bin/console cache:warmup --no-interaction
 
                         # Run migrations (optional, uncomment if needed)
-                        # php bin/console doctrine:migrations:migrate --no-interaction
+                        # APP_ENV=prod php bin/console doctrine:migrations:migrate --no-interaction
 
                         echo "Deployment successful!"

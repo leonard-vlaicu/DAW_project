@@ -60,3 +60,16 @@ when@prod:
                 channels: [deprecation]
                 path: php://stderr
                 formatter: monolog.formatter.json
+            # Log critical errors to a separate file for quick access
+            critical:
+                type: stream
+                path: "%kernel.logs_dir%/critical.log"
+                level: critical
+                formatter: monolog.formatter.json
+            # Doctrine-specific logging
+            doctrine:
+                type: stream
+                path: "%kernel.logs_dir%/doctrine.log"
+                level: warning
+                channels: [ doctrine ]
+                formatter: monolog.formatter.json

@@ -50,7 +50,7 @@ jobs:
                         fi
 
                         # Install composer dependencies
-                        composer install --optimize-autoloader --no-interaction
+                        composer install --no-dev --optimize-autoloader --no-interaction
 
                         # Clear cache
                         php bin/console cache:clear --env=dev --no-interaction

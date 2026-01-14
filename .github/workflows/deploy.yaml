@@ -27,7 +27,7 @@ jobs:
                     password: ${{ secrets.W1_PASSWORD }}
 
                     script: |
-                        cd ~/symfony-app/
+                        cd ~/symfony_app/
 
                         # Initialize git repository if it doesn't exist
                         if [ ! -d .git ]; then

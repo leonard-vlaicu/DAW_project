@@ -57,6 +57,8 @@ class ManageAuthorsController extends AbstractController {
         if ($form->isSubmitted() && $form->isValid()) {
             $this->authorService->save($author);
             $this->addFlash('success', 'Author edited successfully!');
+
+            return $this->redirectToRoute('app_admin_authors');
         }
 
         return $this->render('admin/author/edit_author.html.twig', [

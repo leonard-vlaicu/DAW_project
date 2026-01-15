@@ -58,6 +58,8 @@ class ManageGenresController extends AbstractController {
         if ($form->isSubmitted() && $form->isValid()) {
             $this->genreService->save($genre);
             $this->addFlash('success', 'Genre edited successfully!');
+
+            return $this->redirectToRoute('app_admin_genres');
         }
 
         return $this->render('admin/genre/edit_genre.html.twig', [

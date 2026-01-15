@@ -57,6 +57,8 @@ class ManageBooksController extends AbstractController {
         if ($form->isSubmitted() && $form->isValid()) {
             $this->bookService->save($book);
             $this->addFlash('success', 'Book edited successfully!');
+
+            return $this->redirectToRoute('app_admin_books');
         }
 
         return $this->render('admin/books/edit_book.html.twig', [

@@ -1,0 +1,33 @@
+<div class="mt-5 rounded-box border border-base-content/5 bg-base-200">
+    <table class="table">
+        <!-- head -->
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Email</th>
+            <th>Book title - ID</th>
+            <th>Begin Date</th>
+            <th>End Date</th>
+            <th></th>
+        </tr>
+        </thead>
+
+        <tbody>
+        {% for booking in bookings %}
+            <tr class="hover:bg-base-100 transition duration-200 ease-in-out">
+                <th>{{ booking.id }}</th>
+                <th>{{ booking.user.email }}</th>
+                <th>{{ booking.book.title }} - {{ booking.book.id }}</th>
+                <th>{{ booking.beginDate | date('Y-m-d') }}</th>
+                <th>{{ booking.endDate | date('Y-m-d') }}</th>
+                <th>
+                    <a href="{{ path('app_booking_delete', {'id': booking.id}) }}">
+                        <button class="btn btn-error">Delete</button>
+                    </a>
+                </th>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+

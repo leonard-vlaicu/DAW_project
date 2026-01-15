@@ -30,6 +30,10 @@ class BookingController extends AbstractController {
 
     #[Route(path: '/book-listing/view', name: 'app_bookings_view')]
     public function viewBookings(): Response {
+        if (!$this->getUser()) {
+            return $this->redirectToRoute('app_login');
+        }
+
         $bookings = $this->bookingService->findBookingsByUserId($this->getUser()->getId());
 
         return $this->render('user/bookings.html.twig', [
@@ -40,6 +44,10 @@ class BookingController extends AbstractController {
     #[Route('/book-listing/delete/{id}', name: 'app_booking_delete')]
     public function deleteBooking(int $id): Response {
         $booking = $this->bookingService->getBookingById($id);
+
+        if ($booking->getUser()->getId() !== $this->getUser() && $this->getUser()->getId()) {
+            return $this->redirectToRoute('app_bookings_view');
+        }
 
         try {
             $this->bookingService->delete($booking);

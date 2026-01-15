@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}
+    VL - Library | My bookings
+{% endblock %}
+
+{% block body %}
+
+    <div class="m-4">
+        {% for error in app.flashes('error') %}
+            <div class="alert alert-error alert-soft mb-10">{{ error }}</div>
+        {% endfor %}
+
+        {% for message in app.flashes('success') %}
+            <div class="alert alert-success alert-soft mb-10">{{ message }}</div>
+        {% endfor %}
+
+        <h1 class="text-4xl font-bold">My bookings</h1>
+        <div class="divider"></div>
+
+        {% include 'components/_booking_table.html.twig'
+            with { 'bookings': bookings } %}
+    </div>
+
+{% endblock %}

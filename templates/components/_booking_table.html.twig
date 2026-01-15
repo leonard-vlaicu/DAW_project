@@ -21,9 +21,15 @@
                 <th>{{ booking.beginDate | date('Y-m-d') }}</th>
                 <th>{{ booking.endDate | date('Y-m-d') }}</th>
                 <th>
-                    <a href="{{ path('app_booking_delete', {'id': booking.id}) }}">
-                        <button class="btn btn-error">Delete</button>
-                    </a>
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <a href="{{ path('app_admin_booking_delete', {'id': booking.id}) }}">
+                            <button class="btn btn-error">Delete</button>
+                        </a>
+                    {% else %}
+                        <a href="{{ path('app_booking_delete', {'id': booking.id}) }}">
+                            <button class="btn btn-error">Delete</button>
+                        </a>
+                    {% endif %}
                 </th>
             </tr>
         {% endfor %}

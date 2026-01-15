@@ -28,6 +28,29 @@ class BookingController extends AbstractController {
         ]);
     }
 
+    #[Route(path: '/book-listing/view', name: 'app_bookings_view')]
+    public function viewBookings(): Response {
+        $bookings = $this->bookingService->findBookingsByUserId($this->getUser()->getId());
+
+        return $this->render('user/bookings.html.twig', [
+            'bookings' => $bookings
+        ]);
+    }
+
+    #[Route('/book-listing/delete/{id}', name: 'app_booking_delete')]
+    public function deleteBooking(int $id): Response {
+        $booking = $this->bookingService->getBookingById($id);
+
+        try {
+            $this->bookingService->delete($booking);
+            $this->addFlash('success', 'Booking deleted successfully!');
+        } catch (\Exception $e) {
+            $this->addFlash('error', "Failed to delete booking: " . $e->getMessage());
+        } finally {
+            return $this->redirectToRoute('app_bookings_view');
+        }
+    }
+
     #[Route(path: '/book-listing/create/{id}', name: 'app_booking_create')]
     public function createBooking(Request $request, int $id): Response {
         $book = $this->bookService->getBookById($id);

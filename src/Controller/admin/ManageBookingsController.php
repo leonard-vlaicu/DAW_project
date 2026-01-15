@@ -20,7 +20,7 @@ class ManageBookingsController extends AbstractController {
         ]);
     }
 
-    #[Route('/bookings/delete/{id}', name: 'app_booking_delete')]
+    #[Route('/admin/bookings/delete/{id}', name: 'app_admin_booking_delete')]
     public function deleteBooking(int $id): Response {
         $booking = $this->bookingService->getBookingById($id);
 
